@@ -33,7 +33,7 @@ month=MOD(YYYYMM, 100),
 hs6_chapter = FLOOR(HS6/10000),
 Trade = 'Import';
 
--- testing final result on the table
+-- testing final result from the table import_2002
 Select * from import_2002
 limit 2000;
 
@@ -136,9 +136,11 @@ $$;
 
 call Data_prepare_export();
 
+
+
 -- Creating a table of total imports
 
-CREATE OR REPLACE VIEW total_imports AS
+CREATE OR REPLACE TABLE total_imports AS
 SELECT * FROM import_2002
 UNION ALL SELECT * FROM import_2003
 UNION ALL SELECT * FROM import_2004
@@ -163,11 +165,10 @@ UNION ALL SELECT * FROM import_2022;
 
 
 
-
 -- Creating a table of total imports
 
-CREATE OR REPLACE VIEW total_exports AS
-SELECT * FROM import_2002
+CREATE OR REPLACE TABLE total_exports AS
+SELECT * FROM export_2002
 UNION ALL SELECT * FROM export_2003
 UNION ALL SELECT * FROM export_2004
 UNION ALL SELECT * FROM export_2005
@@ -190,8 +191,31 @@ UNION ALL SELECT * FROM export_2021
 UNION ALL SELECT * FROM export_2022;
 
 
+
+--- checking data
 select sum(value) from total_exports
 where countrycode = 'US';
 
-select sum(value) from total_exports
-where;
+select * from total_exports
+limit 1;
+
+
+select * from total_imports
+limit 1;
+
+
+-- Cleaning data 
+ALTER TABLE total_imports
+rename column Provience to State;
+
+
+--- creating a dataset of total trade from 2002-2022
+Create or Replace TABLE Total_Trade
+AS
+SELECT * FROM total_imports
+UNION ALL SELECT * FROM total_exports;
+
+SELECT count(*) FROM TOTAL_TRADE;
+
+SELECT * FROM TOTAL_TRADE
+LIMIT 20;

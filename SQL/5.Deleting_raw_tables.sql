@@ -57,7 +57,3 @@ END;
 $$;
 
 call Delete_all_export_row_files();
-
-
-Select * from Export_2020
-limit 20;
